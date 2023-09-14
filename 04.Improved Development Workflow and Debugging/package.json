@@ -1,0 +1,16 @@
+{
+  "name": "04.improved-development-workflow-and-debugging",
+  "version": "1.0.0",
+  "description": "complete nodejs guide",
+  "main": "lecture42_app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node lecture42_app.js",
+    "start:dev": "nodemon lecture42_app.js"
+  },
+  "author": "KLause",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
