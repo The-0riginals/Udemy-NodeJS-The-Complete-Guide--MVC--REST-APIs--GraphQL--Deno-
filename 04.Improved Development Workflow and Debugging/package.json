@@ -5,12 +5,9 @@
   "main": "lecture42_app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node lecture42_app.js",
-    "start:dev": "nodemon lecture42_app.js"
+    "start": "node --watch lecture42_app.js",
+    "start:dev": "node lecture42_app.js"
   },
   "author": "KLause",
-  "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  }
+  "license": "ISC"
 }
