@@ -3,7 +3,7 @@
   "main": "lecture63_app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --watch lecture63_app.js",
+    "start": "node --watch lecture64_app.js",
     "start:dev": "node lecture59_app.js"
   },
   "author": "KLause",
