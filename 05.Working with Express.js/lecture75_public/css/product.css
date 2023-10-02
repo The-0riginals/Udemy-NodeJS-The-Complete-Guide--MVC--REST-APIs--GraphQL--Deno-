@@ -1,0 +1,98 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.main-header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+}
+
+.main-header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+.main-header__item-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.main-header__item {
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+.main-header__item a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.main-header__item a:hover,
+.main-header__item a:active,
+.main-header__item a.active {
+    color: wheat;
+}
+
+main {
+    margin: 1rem;
+}
+
+.product-form {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.form-control label {
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
+.form-control input,
+.form-control textarea {
+    padding: 0.5rem;
+}
+
+.form-control input {
+    border: 1px solid yellowgreen;
+    font: inherit;
+    border-radius: 5px;
+}
+
+.form-control button {
+    padding: 0.5rem;
+    background-color: #333;
+    color: whitesmoke;
+    font: inherit;
+    size: 3rem;
+    border: none;
+    cursor: pointer;
+}
+
+.form-control button:hover,
+.form-control button:active {
+    background-color: wheat;
+    color: #333;
+}
+
+.form-control button:focus {
+    outline: none;
+}
