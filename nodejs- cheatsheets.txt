@@ -1,0 +1,106 @@
+https://github.com/Anik7303/nodejs-the-complete-guide
+
+Node js role in Web development
+- run server:  create Server & Listen to in coming requests
+- Business logic : Handle request, Validate input, Connect to Database
+- Responses: Return Responses ( Rendered HTML , Json,...)
+
+alternatives: pytjhon(Django), Php, ruby, Asp.net
+
+Some of the main disadvantages:
+1. Node isn't very good at hardcore CPU intensive tasks like crunching a lot of numbers or cryptography.
+2. Its single-threaded nature makes it harder to utilize multiple cores since the only way to use multiple cores is to create multiple processes which isn't ideal.
+3. Asynchronous code is hard to reason about and most of the stuff you'll be doing with Node is async. It's better than working with threads like you do in Java/C++, but there are languages that do it better like Go.
+Node is great at doing I/O though which makes it a really good choice for building websites. As long as performance or parallel processing aren't the crux of the issue, then Node is a contender. The performance part can be alleviated by using web workers or AWS Lambda
+
+Your misunderstanding is extremely common. Many people are taught that multithreading and asynchrony are the same thing, but they are not.
+
+An analogy usually helps. You are cooking in a restaurant. An order comes in for eggs and toast.
+
+● Synchronous: you cook the eggs, then you cook the toast.
+
+● Asynchronous, single threaded: you start the eggs cooking and set a timer. You start the toast cooking, and set a timer. While they are both cooking, you clean the kitchen. When the timers go off you take the eggs off the heat and the toast out of the toaster and serve them.
+
+● Asynchronous, multithreaded: you hire two more cooks, one to cook eggs and one to cook toast. Now you have the problem of coordinating the cooks so that they do not conflict with each other in the kitchen when sharing resources. And you have to pay them."
+
+NodeJS is single-threaded rather than synchronous, meaning the event loop runs on the same thread as everything else.
+
+section 3: summary
+*)How  the Web work:
+ client-> request -> server -> response -> client
+*) Program lifecycle & event loop
+- nodejs runs non-blocking js code and uses an event-driven code("Event Loop") for running your logic
+- A node program exirs as soon as there is no more work to do
+- note: The CreateServer() event never finish by default
+*) Asynchronous Code
+- Js code is non-blocking 
+- Use callbacks and events => Orders changes!
+*) Requests & Responses
+- Parse request data in chunks(Stream & Buffers)
+- avoid "double responses"
+*) NodeJS & Core modules
+- Nodejs ships with multiple core modules(http,fs, path,..)
+- Code modules can be imported into any file to be used there
+- import via require('module')
+*) The Node module system
+- Import via require('./path-to-file') for custom files or require('module') for core & third-party modules
+- Export via module.export or just exports( for multiple exports)
+
+-> https://viblo.asia/p/xu-ly-dong-thoi-10000-request-trong-nodejs-BQyJKR3M4Me?fbclid=IwAR27ikb9XnkJ-_bnuij8T7Mzprpsnb0yK9Ll1p86004eZPLTHdWTiAL_EVA
+
+
+*)Global Features vs Core Modules vs Third-Party Modules
+You can basically differentiate between:
+- Global features: Keywords like const or function but also some global objects like process
+- Core Node.js Modules: Examples would be the file-system module ("fs"), the path module ("path") or the Http module ("http")
+- Third-party Modules: Installed via npm install - you can add any kind of feature to your app via this way
+
++Global features are always available, you don't need to import them into the files where you want to use them.
+
++Core Node.js Modules don't need to be installed (NO npm install is required) but you need to import them when you want to use features exposed by them.
+Example:
+const fs = require('fs');
+You can now use the fs object exported by the "fs" module..
+
++Third-party Modules need to be installed (via npm install in the project folder) AND imported.
+Example (which you don't need to understand yet - we'll cover this later in the course):
+// In terminal/ command prompt
+npm install --save express-session
+// In code file (e.g. app.js)
+const sessions = require('express-session');
+
+*) type of error: syntax error; rumtime error; logic error
+*)
+
+//section 5
+
+express.js
+- server logic is complex!
+- you want to focus on ur bussiness logic not the nitty gitty details
+- Use a framework for the heavy lifting
++Framework: helper functions ,tools,rules that help u build ur application
+-alternative: vanilla nodejs,adonis,koa,sails,Nest. js,...
+
+*) middleware
+				     [next()]	         [res.send()]
+	request  ->	middleware	->	 middleware	->	response ->
+		   (req,res,next)=>{...}    (req,res,next)=>{...}
+
+*) what is Express.js?
+- Express.js is Nodejs framework - a packet that adds a bunch of utility functions and tools and a clear set of rules an how app should be build(middleware)!
+- its highly extensible and other packages acan be plugged into it(middleware!)
+
+*)Middleware, next() and res()
+-Express,js relies heavily on middleware functions-you can easily add them by calling use()
+-Middleware functions handle a request and should call next() to forward the request to the next function in line or send a response
+
+*) Routing
+-You can filter requests by path and  method 
+- If you filter by method, paths are matched exactly,otherwisem, the first segment of URL is matched
+- you can use express.router to split your routes across files elegantely
+
+*)Serve files
+- you are not limited to serving dummy text as response
+- you can sendFile()s to your users-eg: HTML files
+- if a request is directly makefor a file (e.g a .css file is requested),you can enable static serving for such files via express.static().
+
