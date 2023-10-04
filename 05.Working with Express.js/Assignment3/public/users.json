@@ -1,0 +1,24 @@
+[
+    {
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "username": "johndoe123",
+        "age": 28,
+        "address": "123 Main Street, Anytown, USA"
+    },
+    {
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "username": "janesmith456",
+        "age": 32,
+        "address": "456 Elm Avenue, Somewhere City, USA"
+    },
+    {
+        "name": "Bob Johnson",
+        "email": "bob.johnson@example.com",
+        "username": "bobjohnson789",
+        "age": 25,
+        "address": "789 Oak Lane, Nowhereville, USA"
+    }
+]
+
