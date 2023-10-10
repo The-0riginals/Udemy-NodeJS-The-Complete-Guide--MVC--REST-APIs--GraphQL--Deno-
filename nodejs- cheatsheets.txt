@@ -104,3 +104,12 @@ express.js
 - you can sendFile()s to your users-eg: HTML files
 - if a request is directly makefor a file (e.g a .css file is requested),you can enable static serving for such files via express.static().
 
+//------------------------------
+// Section 7: MVC : Model-View-Controller
+- Models: are basically objects or is a part of your code that responsible for representing your data
++ allow you ti work with data(e.g: save,fetch,..)
+- Views: responsible for what user sees in the end, redering right content in our html documents and sends bit back
++ Decoupleed from your application code
+-Controlers: Connecting your Models and your Views
++ contains the "in-between logic"
+*) Routes: decide with model work , and with view to render
