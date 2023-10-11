@@ -106,10 +106,17 @@ express.js
 
 //------------------------------
 // Section 7: MVC : Model-View-Controller
-- Models: are basically objects or is a part of your code that responsible for representing your data
-+ allow you ti work with data(e.g: save,fetch,..)
-- Views: responsible for what user sees in the end, redering right content in our html documents and sends bit back
+- Models: 
++ are basically objects or is a part of your code that responsible for representing your data
++ allow you to work/manager with data(e.g: save,fetch,..)
++ doesnt matter if you manage data in memory,files,databases
++ contain data logics
+- Views: 
++ responsible for what user sees in the end, redering right content in our html documents and sends bit back
 + Decoupleed from your application code
--Controlers: Connecting your Models and your Views
++ shouldn't contain too much logic(handlebars)
+-Controlers: 
++ Connecting your Models and your Views
 + contains the "in-between logic"
++ should only make sure that two can communcate(both dicrections)
 *) Routes: decide with model work , and with view to render
