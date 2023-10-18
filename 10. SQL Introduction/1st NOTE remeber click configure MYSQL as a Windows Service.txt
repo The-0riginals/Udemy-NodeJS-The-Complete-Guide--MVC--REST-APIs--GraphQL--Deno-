@@ -1,0 +1,5 @@
+for window, at Windows Service step:
+You must keep the "configure mySql server as a windows service" checked.
+Then, you must check the "start the mySql server at system startup" and "install as windows service" options.
+Then, you must click on the "execute" button.
+

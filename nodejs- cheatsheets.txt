@@ -137,3 +137,39 @@ ex: /admin/edit-product/0?edit=true
 + A Cart model was added - it holds static methods only
 + You can interact between models(e.g delete cart item if a product is deleted)
 + Working with files for data storage is suboptional for bigger amounts of data
+
+//------------------------------
+//section 10: SQL introdution
+- Goal:  store Data and make it easily accessible => use a Database(quicker access than a file
++ SQL Database : Mysql, sql server,..
++ No SQL: mongoDB,..
+- SQL: Structured Query Language
++ SQL is a language to interact with databases
++ SQL is used to store and retrieve data from databases
++ SQL is a standard language for accessing and manipulating databases
+
+- SQL databases:
++ SQL databases have predefined schema( each table clearly defines what columns it has and what data type each column can have)
++ SQL databases are table based
++ SQL databases are better for multi-row transactions
++ SQL databases are relational( data is stored in tables and can be linked using foreign keys: one-to-one, one-to-many, many-to-many)
++ SQL databases are vertically scalable
+ex sql query: Select * from products where price > 10
+
+- NoSQL
++ table are called collections, instead of rows, we have documents(ex: {name: 'Max', age: 29},{name: 'Manu', age: 30})
+  it doesnt have to be the same structure (no schema)
++ NoSQL databases are document, key-value, graph or wide-column stores
++ NoSQL databases are better for unstructured data like documents or JSON
++ NoSQL databases are non-relational (so it could be duplicated or nested/merged)
+  or distributed (data is spread across multiple servers)
++ NoSQL databases are horizontally scalable, but vertically still possible
++ NoSQL databases have dynamic schema for unstructured data
+
+*)  Horizonal vs Vertical Scaling
+- Horizonal Scaling:
++ Add more servers (more machines) and merge Data into one Database
++ Horizontal scaling means breaking up your data and storing it across multiple servers
+(SQL is naturally bad at this because it makes strong guarantees about its data's consistency so everything needs to be synchronized across all shards which requires a lot of communication between them.)
+- Vertical Scaling:
++ Add more power to the existing server (more RAM, CPU, etc.)
