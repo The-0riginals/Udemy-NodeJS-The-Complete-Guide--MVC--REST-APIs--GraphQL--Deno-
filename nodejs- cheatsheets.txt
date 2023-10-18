@@ -120,3 +120,20 @@ express.js
 + contains the "in-between logic"
 + should only make sure that two can communcate(both dicrections)
 *) Routes: decide with model work , and with view to render
+
+//------------------------------
+// Section 9: Dynamic routes & advanced model
+- Dynamic Routing
++ You can pass dynamic path segments by adding a ":" to the Express router path
+ex: router.get('/products/:productId', shopController.getProduct);
++ The name you add after ":" is the name by which you can extract the data on req.params
+ex: exports.getProduct = (req, res, next) => {
+    const prodId = req.params.productId; ...
++ Optional (query) parameters can also be passed (?param=value&b=2) and extracted( req.query.myParam)
+ex: /admin/edit-product/0?edit=true
+    exports.getEditProduct = (req, res, next) => {
+    const editMode = req.query.edit;
+- More on Models
++ A Cart model was added - it holds static methods only
++ You can interact between models(e.g delete cart item if a product is deleted)
++ Working with files for data storage is suboptional for bigger amounts of data

@@ -49,7 +49,7 @@ module.exports = class Cart {
             }
             const updatedCart = {...JSON.parse(fileContent)};//copy the cart
             const product = updatedCart.products.find(prod => prod.id === id);
-            if(!product){
+            if(!product){ //if the product is not in the cart, we will simply ignore the request
                 return;
             }
             const productQty = product.qty;
