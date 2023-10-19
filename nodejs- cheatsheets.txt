@@ -186,3 +186,8 @@ ex sql query: Select * from products where price > 10
 + Instances: are rows in the table , e.g: User.create()
 + Associations: define the associations between models, e.g: User.hasMany(Product)
 +queries: are used to fetch data from a table in the database , e.g: User.findAll()
+
+- Associations: relate different models to each other
++ One-to-one: User.hasOne(Cart)
++ One-to-many: Cart.hasMany(Product)
++ Many-to-many: Product.belongsToMany(User, { through: Order })
