@@ -1,11 +1,10 @@
 // Installing & Implementing Pug
 // npm install --save pug/ejs/handlebars
-// https://pugjs.org/api/getting-started.html
 
 const path = require('path');
 
 const express = require('express');
-const expressHbs = require("express-handlebars");
+const db = require('./util/database');
 
 const app = express();
 
@@ -17,7 +16,18 @@ app.set('views','views');// set the views folder to views, default is views
 const errorController = require('./controllers/error');
 const adminRoutes= require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-const e = require('express');
+//const e = require('express');
+
+// promise is js object that holds the eventual result of an asynchronous operation
+// it allows us to register functions that should execute when the promise is done
+// db.execute('SELECT * FROM products')
+//     .then(result => {
+//         console.log(result[0],result[1]);
+//     })
+//     .catch(err => {
+//         console.log(err);
+//     });
+
 
 // register a parser for incoming requests that have a JSON body
 app.use(express.urlencoded({extended: true}));

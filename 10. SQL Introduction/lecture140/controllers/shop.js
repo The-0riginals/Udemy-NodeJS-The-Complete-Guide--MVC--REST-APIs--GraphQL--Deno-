@@ -2,37 +2,51 @@ const e = require('express');
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 
+//get all products
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll(products => {
-        //use template engine
+    Product.fetchAll()
+    .then(([rows, fieldData]) => {
+        console.log(rows);
         res.render('shop/product-list', {
-            prods: products, 
-            pageTitle: 'All Products', 
+            prods: rows, 
+            pageTitle: 'Shop', 
             path: '/products'
         });
-    });
+    })
+    .catch(
+        err => console.log(err)
+    );
 }
 
+//get a single product by id
 exports.getProduct = (req, res, next) => {
     const prodId = req.params.productId;
-    Product.findById(prodId, product => {
+    Product.findById(prodId)
+    .then(([product]) => {
         res.render('shop/product-detail', {
-            product: product, 
+            product: product[0], // product is an array of products, so we need to get the first element
             pageTitle: product.title, 
             path: '/products' // this path is used to highlight the active link in the navigation bar
         });
-    });
+    })
+    .catch(err => console.log(err));
 }
 
+// rows is an array of products: contains the actual data retrieved from the database
+// fieldData is an array of additional information metadata about the query like field names, types, or other metadata.
 exports.getIndex = (req, res, next) => {
-    Product.fetchAll(products => {
-        //use template engine
-        res.render('shop/index', {
-            prods: products, 
+    Product.fetchAll()
+    .then(([rows, fieldData]) => {
+        console.log(rows);
+        res.render('shop/product-list', {
+            prods: rows, 
             pageTitle: 'Shop', 
-            path: '/'
+            path: '/products'
         });
-    });
+    })
+    .catch(
+        err => console.log(err)
+    );
 }
 
 exports.getCart = (req, res, next) => {
