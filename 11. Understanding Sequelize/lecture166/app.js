@@ -20,6 +20,8 @@ const Product = require('./models/product');
 const User = require('./models/user');
 const Cart = require('./models/cart');
 const CartItem = require('./models/cart-item');
+const OrderItem = require('./models/order-item');
+const Order = require('./models/order');
 
 
 
@@ -55,6 +57,10 @@ Cart.belongsTo(User);//optional
 Cart.belongsToMany(Product, {through: CartItem});//many to many relationship: cart can have many products and a product can be in many carts
 Product.belongsToMany(Cart, {through: CartItem});//many to many relationship
 //through: CartItem is the table that will be used to connect the two tables
+Order.belongsTo(User);
+User.hasMany(Order);
+Product.belongsToMany(Order, {through: OrderItem});
+Order.belongsToMany(Product, {through: OrderItem});
 
 
 //sync will create the tables if they don't exist and relations

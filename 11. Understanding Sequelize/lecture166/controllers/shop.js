@@ -1,6 +1,6 @@
 const e = require('express');
 const Product = require('../models/product');
-const Cart = require('../models/cart');
+const { Sequelize } = require('sequelize');
 
 //get all products
 exports.getProducts = (req, res, next) => {
@@ -123,18 +123,53 @@ exports.postCartDeleteProduct = (req, res, next) => {
     .catch(err => console.log(err));
 }
 
-exports.getOrders = (req, res, next) => {
-    res.render('shop/orders', {
-        pageTitle: 'Your Orders', 
-        path: '/orders', 
-        //layout: false
-    });
-}
+exports.postOrder = (req, res, next) => {
+    let fetchedCart;
+    req.user
+      .getCart()
+      .then(cart => {
+        fetchedCart = cart;
+        return cart.getProducts();
+      })
+      .then(products => {
+        return req.user
+          .createOrder()
+          .then(order => {
+            return order.addProducts(
+              products.map(product => {
+                product.orderItem = { quantity: product.cartItem.quantity };
+                return product;
+              })
+            );
+          })
+          .catch(err => console.log(err));
+      })
+      .then(result => {
+        return fetchedCart.setProducts(null);
+      })
+      .then(result => {
+        res.redirect('/orders');
+      })
+      .catch(err => console.log(err));
+  };
 
-exports.getCheckout = (req, res, next) => {
-    res.render('shop/checkout', {
-        pageTitle: 'Checkout', 
-        path: '/checkout', 
-        //layout: false
-    });
-}
+exports.getOrders = (req, res, next) => {
+    req.user
+      .getOrders({include: ['products']})
+      .then(orders => {
+        res.render('shop/orders', {
+          path: '/orders',
+          pageTitle: 'Your Orders',
+          orders: orders
+        });
+      })
+      .catch(err => console.log(err));
+};
+//In Sequelize when you create any assciation between two models, sequelize provides us with some methods. For example in case of User.hasMany(Order) association sequelize provides us with:
+// 1. add
+// 2.count
+// 3.create
+// 4.get
+// 5.has
+// 6.remove
+// 7.set

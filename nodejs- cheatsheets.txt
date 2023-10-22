@@ -180,6 +180,7 @@ ex sql query: Select * from products where price > 10
 + Sequelize is an ORM(Object Relational Mapper) library for Node.js
 + Sequelize allows you to interact with different SQL databases in an easier way: you don't have to write SQL queries, you can just use JavaScript
 + Sequelize is a promise-based Node.js ORM for Postgres, MySQL, MariaDB, SQLite and Microsoft SQL Server
++ Sequelize allows you to define models, interact with database through them and associations between them
 
 - core concepts
 + Models: represent a table in the database ,e.g: Product, User, Order,..
