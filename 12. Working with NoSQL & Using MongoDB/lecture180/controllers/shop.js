@@ -18,18 +18,7 @@ exports.getProducts = (req, res, next) => {
 //get a single product by id
 exports.getProduct = (req, res, next) => {
     const prodId = req.params.productId;
-    // Product.findAll({where: {id: prodId}}) // findAll returns an array of products
-    // .then(products => {
-    //     res.render('shop/product-detail', {
-    //         product: products[0], 
-    //         pageTitle: products[0].title, 
-    //         path: '/products' // this path is used to highlight the active link in the navigation bar
-    //     });
-    // })
-    // .catch(err => console.log(err));
-
-    // alternative way to get a single product by id
-    Product.findByPk(prodId)
+    Product.findById(prodId)
     .then(product => {
         res.render('shop/product-detail', {
             product: product, 

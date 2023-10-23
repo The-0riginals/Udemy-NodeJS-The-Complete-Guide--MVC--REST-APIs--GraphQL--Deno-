@@ -10,7 +10,7 @@ router.get('/', shopController.getIndex);
 
 router.get('/products', shopController.getProducts);
 
-//router.get('/products/:productId', shopController.getProduct);
+router.get('/products/:productId', shopController.getProduct);
 // :productId is a dynamic segment: /products/123
 // if we have multiple dynamic segments, the order of the routes matters
 // if we have /products/:productId and /products/create, the create route will never be reached
