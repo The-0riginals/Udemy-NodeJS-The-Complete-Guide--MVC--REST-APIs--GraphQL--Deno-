@@ -1,0 +1,61 @@
+Connecting with MongoDB for VS Code
+
+1. Install MongoDB for VS Code.
+In VS Code, open "Extensions" in the left navigation and search for "MongoDB for VS Code." Select the extension and click install.
+
+2. In VS Code, open the Command Palette.
+Click on "View" and open "Command Palette."
+Search "MongoDB: Connect" on the Command Palette and click on "Connect with Connection String."
+
+3. Connect to your MongoDB deployment.
+Paste your connection string into the Command Palette.
+mongodb+srv://<Username>:<password>@cluster0.lw7vbw4.mongodb.net/
+
+Replace <password> with the password for the <username> user.
+When entering your password, make sure all special characters are URL encoded. 
+
+4. Click “Create New Playground” in MongoDB for VS Code to get started.
+
+
+// i'm not sure how to use those code above, so i just follow the instruction as in lecture
+1. install mongodb for vs code: npm install mongodb
+
+2 in database.js, add the following code:
+
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
+
+let _db;
+
+const mongoConnect = (callback) => {
+    MongoClient.connect("mongodb+srv://Klaus:19001009@cluster0.lw7vbw4.mongodb.net/") // klaus is the username, 19001009 is the password, change to your own
+        .then(client => {
+            console.log('Connected!');
+            _db = client.db();
+            callback();
+        })
+        .catch(err => {
+            console.log(err);
+            throw err;
+        });
+}
+
+const getDb = () => {
+    if (_db) {
+        return _db;
+    }
+    throw 'No database found!';
+}
+
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;
+
+3. in app.js, add the following code:
+
+const mongoConnect = require('./util/database').mongoConnect;
+
+mongoConnect(() => {
+    app.listen(3000);
+});
+
+=> it works!

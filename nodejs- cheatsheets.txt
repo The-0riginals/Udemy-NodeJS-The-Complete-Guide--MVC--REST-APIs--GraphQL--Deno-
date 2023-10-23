@@ -192,3 +192,46 @@ ex sql query: Select * from products where price > 10
 + One-to-one: User.hasOne(Cart)
 + One-to-many: Cart.hasMany(Product)
 + Many-to-many: Product.belongsToMany(User, { through: Order })
+
+//------------------------------
+//section 12: Working with NoSQL & using MongoDB
+- MongoDB
++ MongoDB is a NoSQL database, built for large-scale ,it can store lots and lots of data
++ MongoDB stores data in documents (instead of tables)
++ MongoDB is a document database with the scalability and flexibility that you want with the querying and indexing that you need
++ MongoDB is a distributed database at its core, so high availability, horizontal scaling, and geographic distribution are built in and easy to use
+
+-Nested/ embedded documents
++ Customer:
+{
+  username: 'Max',
+  age: 29,
+  address: {
+    street: 'Main St',
+    city: 'Boston'
+  }
+}
+
+- references (lots of data duplication)
++ Customer:
+{
+  username: 'Max',
+  favBooks: [{...}, {...}, {...}]
+}
++ Customers:
+{
+  username: 'Max',
+  favBooks: ['bookId1', 'bookId2', 'bookId3']
+}
++ Books:
+{
+  _id: 'bookId1',
+  title: 'A Great Book'
+}
+
+* you CAN relate data in MongoDB but you should avoid it as much as possible or your queries will get very complex and slow
+
+- MongoDB alas
++ MongoDB Atlas is a fully-managed cloud database developed by the same people that build MongoDB
++ MongoDB Atlas handles all the complexity of deploying, managing, and healing your deployments on the cloud service provider of your choice (AWS, Azure, and GCP)
++ MongoDB Atlas is the easiest way to deploy, operate, and scale MongoDB in the cloud
