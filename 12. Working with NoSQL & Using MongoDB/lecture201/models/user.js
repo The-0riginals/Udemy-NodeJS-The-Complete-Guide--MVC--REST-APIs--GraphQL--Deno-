@@ -98,11 +98,11 @@ class User {
             .insertOne(order);
         })
         .then(result => {
-            this.cart = {items: []};
+            this.cart = {items: []};// clear the cart
             return db.collection('users')
             .updateOne(
                 {_id: new mongodb.ObjectId(this._id)},
-                {$set: {cart: {items: []}}}
+                {$set: {cart: {items: []}}}//$set will override the cart property with a new empty cart
             );
         });
     }
