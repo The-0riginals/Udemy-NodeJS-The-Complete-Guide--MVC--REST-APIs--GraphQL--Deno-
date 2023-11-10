@@ -244,4 +244,17 @@ ex sql query: Select * from products where price > 10
 
 + Use the official MongoDB driver or Mongoose to interact with MongoDB in Node.js
 + commands like insertOne(), find(), updateOne(), deleteOne() are available and make CRUD operations easy (CRUD = Create, Read, Update, Delete)
-
+//------------------------------
+//section 13: Working with Mongoose
+- Mongoose
++ Mongoose is an ODM(Object Document Mapping) library for Node.js and MongoDB
++ A Mongoose schema is a document data structure (or shape of the document) that is enforced via the application layer
+ex:
+instead of (native driver):
+db.collection('users').insertOne({username: 'Max', age: 29, email: ''})
+we can use:
+User.create({username: 'Max', age: 29, email: ''})
+-core concepts
++ schemas and models: eg: User, Product, Order,..
++ Instances: const user = new User({username: 'Max', age: 29, email: ''})
++ queries: eg: User.find(), User.findOne(), User.findById(),..
