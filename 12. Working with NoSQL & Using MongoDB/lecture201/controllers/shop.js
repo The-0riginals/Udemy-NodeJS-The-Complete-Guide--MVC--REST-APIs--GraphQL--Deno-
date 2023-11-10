@@ -85,9 +85,6 @@ exports.postOrder = (req, res, next) => {
     req.user
       .addOrder()
       .then(result => {
-        return fetchedCart.setProducts(null);
-      })
-      .then(result => {
         res.redirect('/orders');
       })
       .catch(err => console.log(err));

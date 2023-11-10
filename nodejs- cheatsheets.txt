@@ -235,3 +235,13 @@ ex sql query: Select * from products where price > 10
 + MongoDB Atlas is a fully-managed cloud database developed by the same people that build MongoDB
 + MongoDB Atlas handles all the complexity of deploying, managing, and healing your deployments on the cloud service provider of your choice (AWS, Azure, and GCP)
 + MongoDB Atlas is the easiest way to deploy, operate, and scale MongoDB in the cloud
+
+* summary:
++ MongoDB/NoSQL database alternative to SQL
++ no strict schema, fewer relations
++ you can of course use schemas and reference-based relations but got more flexibility
++ often, relations are alse created by embedding other documents/data
+
++ Use the official MongoDB driver or Mongoose to interact with MongoDB in Node.js
++ commands like insertOne(), find(), updateOne(), deleteOne() are available and make CRUD operations easy (CRUD = Create, Read, Update, Delete)
+
