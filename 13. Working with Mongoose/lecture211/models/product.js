@@ -19,8 +19,19 @@ const productSchema = new Schema({
     imageUrl: {
         type: String,
         required: true
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',//this is the name of the model we want to connect to
+        required: true
     }
 });
+
+module.exports = mongoose.model('Product', productSchema);
+//mongoose will automatically create a collection named 'products' in the database, and the documents will be created based on the productSchema
+
+
+
 
 // const mongodb = require('mongodb');
 // //const getDb = require('../util/database').getDb;
