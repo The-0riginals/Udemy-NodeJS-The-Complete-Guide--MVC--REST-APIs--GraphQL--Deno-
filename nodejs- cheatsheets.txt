@@ -258,3 +258,11 @@ User.create({username: 'Max', age: 29, email: ''})
 + schemas and models: eg: User, Product, Order,..
 + Instances: const user = new User({username: 'Max', age: 29, email: ''})
 + queries: eg: User.find(), User.findOne(), User.findById(),..
+
+//------------------------------
+//section 14: Sessions & Cookies
+- Cookies
++ Cookies are small pieces of data that are stored on the client-side and are sent along with requests
++ Cookies are stored in the browser and are sent along with requests
+eg:
+Set-Cookie: cart=abcde12345; Max-Age=3600; Domain=example.com; Path=/; Secure; HttpOnly
