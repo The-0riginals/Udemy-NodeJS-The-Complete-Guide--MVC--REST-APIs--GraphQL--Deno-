@@ -271,3 +271,19 @@ Set-Cookie: cart=abcde12345; Max-Age=3600; Domain=example.com; Path=/; Secure; H
 + Sessions are a way to store data on the server-side (instead of the client-side as cookies do)
 + Sessions are stored on the server and are referenced via a cookie (sessionId - hash ID)// associated with user/client via cookie
 
+//summary
+- Cookies
++ great for storing data on client(browser)
++ do NOT store sensitive data here! it can be viewed and manipulated by the user
++ can be configured to expire when the browser is closed or at a specific date/age is reached
++ work well with Sessions
+
+- Sessions
++ Stored on the server, NOT on the client
++ Great storing sensitive data that should survive across requests
++ You can store Anything in sessions
++ Often used for storing user data/authentication status
++ Identified via a cookie (sessionId)
++ You can use different storages for saving your sessions (e.g. MongoDB, Redis, etc.)
+
+
