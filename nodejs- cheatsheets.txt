@@ -286,4 +286,21 @@ Set-Cookie: cart=abcde12345; Max-Age=3600; Domain=example.com; Path=/; Secure; H
 + Identified via a cookie (sessionId)
 + You can use different storages for saving your sessions (e.g. MongoDB, Redis, etc.)
 
+//------------------------------
+//section 15: Authentication
+- Authentication
++ Authentication is the process of verifying who a user is
++ Authorization is the process of verifying what they have access to
+eg:
+Authentication: checking and handling the login state
+Authorization: Access to certain resources
+- implementing authentication: 
++ user sends credentials (username, password) to the server, 
++ server checks if they are valid and returns a response(200)
++ create a session for the user and store it on the server
++ send a cookie to the client (sessionId)
++ client sends cookie along with each request
++ server checks if the cookie is valid and authenticates the user
+
+
 
