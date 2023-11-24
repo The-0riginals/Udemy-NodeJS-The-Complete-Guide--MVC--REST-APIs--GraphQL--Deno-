@@ -266,3 +266,8 @@ User.create({username: 'Max', age: 29, email: ''})
 + Cookies are stored in the browser and are sent along with requests
 eg:
 Set-Cookie: cart=abcde12345; Max-Age=3600; Domain=example.com; Path=/; Secure; HttpOnly
+
+- Sessions
++ Sessions are a way to store data on the server-side (instead of the client-side as cookies do)
++ Sessions are stored on the server and are referenced via a cookie (sessionId - hash ID)// associated with user/client via cookie
+

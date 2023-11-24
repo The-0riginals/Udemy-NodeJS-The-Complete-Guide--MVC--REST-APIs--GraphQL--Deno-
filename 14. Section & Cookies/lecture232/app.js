@@ -2,10 +2,20 @@ const path = require('path');
 const mongoose = require('mongoose');
 
 const express = require('express');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
+const MONGODB_URI = "mongodb+srv://Klaus:19001009@cluster0.lw7vbw4.mongodb.net/shop";
+
 const app = express();
+const store = new MongoDBStore({
+    uri: MONGODB_URI,
+    collection: 'sessions'
+});
+
 // view engine helps express know which template engine to use
 app.set("view engine", "ejs");// set the template engine to ejs
 //views helps express know where to find the templates
@@ -22,7 +32,14 @@ const authRoutes = require('./routes/auth');
 // register a parser for incoming requests that have a JSON body
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname,'public')));
-
+app.use(
+    session({
+        secret: 'my secret', 
+        resave: false, 
+        saveUninitialized: false, 
+        store: store
+    })
+);
 //middleware to add a user to the request
 //this middleware will run for every incoming request 
 //it means that it will only execute if we finished the sync process
@@ -41,7 +58,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose.connect(
-        "mongodb+srv://Klaus:19001009@cluster0.lw7vbw4.mongodb.net/shop?retryWrites=true",
+        MONGODB_URI,
         { useNewUrlParser: true, useUnifiedTopology: true }
     )
     .then(result => {
