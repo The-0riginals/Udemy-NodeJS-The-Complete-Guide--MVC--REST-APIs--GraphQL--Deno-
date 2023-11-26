@@ -321,3 +321,11 @@ Authorization: Access to certain resources
 + passwords should be hashed
 + csrf attacks are real issue and you should protect your app against them for your application's security
 + for a better user experience, you can flash data/messages into session which you then can display in your views
+
+//------------------------------
+//section 16: Sending Emails
+- Sending Emails
++ Emails are sent via SMTP(Simple Mail Transfer Protocol) servers
++ You can use Nodemailer to send emails from Node.js
++ You can use Mailtrap to test your emails in a sandbox environment
+

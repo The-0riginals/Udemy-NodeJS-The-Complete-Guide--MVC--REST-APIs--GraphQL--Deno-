@@ -1,0 +1,44 @@
+//https://stackoverflow.com/questions/60701936/error-invalid-login-application-specific-password-required/60718806#60718806
+
+
+//-----------------------------------------
+//important note:
+As of Sep 2022 Mailtrap's Sending API cannot be used to send e-mails to your Mailtrap Sandbox.  It can only be used to send real/production e-mails, to real users.
+Please check https://stackoverflow.com/questions/73734572/mailtrap-api-cannot-send-emails-unauthorized-api-error. I get the unauthorized error as well when trying to send an email.
+
+//-----------------------------------------
+//update: Update: Problem solved:
+
+
+
+Here is the solution to use directly nodemailer with Gmail. No Sendgrip BS. No Mailtrap junk. Nope. Using Nodemailer directly.
+
+
+
+
+
+After getting that Gmail App Password, then we can use it this way:
+
+
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'youremail@gmail.com',
+        pass: 'Your16CharsLongAppPass',
+    }
+});
+
+
+transporter.sendMail({
+    to: email,
+    from: 'youremail@gmail.com',
+    subject: 'Signup succeeded',
+    html: '<h1>You successfully signed up!</h1>'
+}).catch(error => {
+    console.log('error = ', error, '\n');
+});
+
+
+It works.
+
