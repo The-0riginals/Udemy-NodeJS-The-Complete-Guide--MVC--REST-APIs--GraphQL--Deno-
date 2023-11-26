@@ -1,0 +1,166 @@
+//https://www.udemy.com/course/nodejs-the-complete-guide/learn/lecture/34691636#questions/19548182
+HOW TO: the csrf-sync, and csrf-csrf packages
+10 upvotes
+Pierre-François · Lecture 263 · 7 months ago
+Hi, I dove into the subject and have learned how to use both packages from the same author, with their kind help.
+This is what I learned (I'll amend with feedback):
+
+csrf-csrf (double csrf) uses the Double Submit Cookie Pattern, which is required when storing a token on the server is not an option (app with stateless authentication).
+
+- Server generates a token
+- Token is sent to the client with the GET response (for the form's hidden field)
+- Token's hash is sent to the client in a cookie with the GET response
+- Client sends token and hash back to the server when POSTing the form
+- Token and hash are then compared by the server
+
+= The client stored the token (as a hash).
+
+This is not what is recommended for our app, but I'll give you the implementation anyway.
+
+
+
+
+Our app can store a token server-side (stateful authentication) and for that it is recommended to use csrf-sync, which uses the Synchronizer Token Pattern.
+
+- Server generates a token, then stores it
+- Token is sent to the client with the GET response (for the form's hidden field)
+- Client sends token back to the server when POSTing the form
+- The server then compares the server-stored token and the token sent by the client
+
+= The server stored the token (no need for hash).
+
+Implementation of csrf-sync (recommended):
+
+Note that the order is important, the csrfSynchronisedProtection middleware must be after the session, and before the routes, so they'll be protected.
+
+npm install csrf-sync
+
+app.js:
+
+import { csrfSync } from 'csrf-sync';
+...
+ 
+const { csrfSynchronisedProtection } = csrfSync({
+  getTokenFromRequest: (req) => req.body.csrfToken,
+});
+ 
+const app = express();
+ 
+...
+ 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({...}));
+ 
+app.use(csrfSynchronisedProtection);
+ 
+app.use((req, res, next) => {
+  res.locals.isSignedIn = req.session.isSignedIn;
+  res.locals.csrfToken = req.csrfToken(true);
+  next();
+});
+ 
+app.use(routes etc.)
+...
+
+
+
+
+
+
+
+Implementation of csrf-csrf (the other one is better for us, but that'll work):
+
+Same thing about the order.
+
+npm install cookie-parser csrf-csrf
+
+
+
+app.js:
+
+import cookieParser from 'cookie-parser';
+import { doubleCsrf } from 'csrf-csrf';
+...
+ 
+const { doubleCsrfProtection } = doubleCsrf({
+  getSecret: () => 'any long string, used to generate the hash of the token',
+  getTokenFromRequest: (req) => req.body.csrfToken,
+});
+ 
+const app = express();
+ 
+...
+ 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({...}));
+ 
+app.use(cookieParser()); // BEFORE the csrf middleware
+app.use(doubleCsrfProtection);
+ 
+app.use((req, res, next) => {
+  res.locals.isSignedIn = req.session.isSignedIn;
+  res.locals.csrfToken = req.csrfToken(true);
+  next();
+});
+ 
+app.use(routes etc.)
+...
+
+//----------------------------------------------
+Emad
+2 upvotes
+2 months ago
+Thanks for sharing this pierre, but this code with csrf-sync doesn't work for me so I dived into the documentation and did some changes and It worked, here is the Edited Code
+____________________________________________________
+
+const { csrfSync } = require('csrf-sync');
+
+...
+
+const { csrfSynchronisedProtection } = csrfSync({
+
+getTokenFromRequest: (req) => req.body['CSRFToken']
+
+});
+
+const app = express();
+
+...
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(session({...}));
+
+app.use(csrfSynchronisedProtection);
+
+app.use((req, res, next) => {
+
+res.locals.isLoggedIn = req.session.isLoggedIn;
+
+res.locals.csrfToken = req.csrfToken();
+
+next();
+
+});
+
+app.use(routes etc.)
+
+...
+
+___________________________________________________
+
+and in the Views
+.....
+
+<input type="hidden" name="CSRFToken" value="<%= csrfToken %>">
+//----------------------------------------------
+
+
+=>  i also install the "csuft" package and use as the course
+even though it is deprecated, it still works not really perfectly (95% of the time)
+as Teacher Max  and Teaching assistand said, it is not a big deal for this project
+"The purpose of the corresponding course lectures is to explain the general principle of CSRF attacks.
+ You can still safely use the deprecated csurf package for learning purposes, since the attacks are only simulated locally in our code."
+
+=> both of them work eithr way, but i prefer the "csrf-sync" package
+=> i hope there will be update for this course in this section soon

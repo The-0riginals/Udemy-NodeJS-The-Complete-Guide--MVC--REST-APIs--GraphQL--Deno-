@@ -302,5 +302,22 @@ Authorization: Access to certain resources
 + client sends cookie along with each request
 + server checks if the cookie is valid and authenticates the user
 
+- CSRF attacks
++ CSRF stands for Cross-Site Request Forgery
++ CSRF attacks are attacks that are performed on behalf of a logged-in user
++ CSRF attacks are possible because cookies are sent along with each request
+(eg: you are logged in to your bank account and visit a malicious website that sends a request to your bank account and transfers money to the attacker's account)
 
+- CSRF attacks can be prevented by using CSRF tokens
++ CSRF tokens are unique tokens that are generated for each user and sent along with each request
++ The server checks if the token is valid and only then processes the request
+(this way, the malicious website can't send a valid request to server because it doesn't know the token)
 
+*) summary:
++ Authentication means that not every visitor can view and interact with everything
++ Authentication has to happen on the server side and builds up on sessions
++ You can protect routes by checking the (session-controlled) login status right before you access a controller action
+
++ passwords should be hashed
++ csrf attacks are real issue and you should protect your app against them for your application's security
++ for a better user experience, you can flash data/messages into session which you then can display in your views
