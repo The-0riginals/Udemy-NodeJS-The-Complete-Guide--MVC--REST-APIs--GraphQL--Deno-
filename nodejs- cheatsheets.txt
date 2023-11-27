@@ -328,4 +328,16 @@ Authorization: Access to certain resources
 + Emails are sent via SMTP(Simple Mail Transfer Protocol) servers
 + You can use Nodemailer to send emails from Node.js
 + You can use Mailtrap to test your emails in a sandbox environment
++ just use the nodemailer package Mailtrap is now for real emails
+
+//------------------------------
+//section 17: Advanced Authentication
+- Password Reset
++ Password reset is a common feature in web applications
++ Reset password tokens have to be random, unguessable and unique
+
+- Authorization
++ Authorization is the process of verifying what a user has access to
++ not every user should be able to edit or delete every resource
+
 

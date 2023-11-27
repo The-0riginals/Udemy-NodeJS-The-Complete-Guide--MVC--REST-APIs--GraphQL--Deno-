@@ -1,7 +1,6 @@
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
-    createToken(res); // HERE IS USAGE
     res.render('admin/edit-product',{
         pageTitle: 'Add Product', 
         path: '/admin/add-product', 
@@ -45,7 +44,6 @@ exports.getEditProduct = (req, res, next) => {
         if(!product){
             return res.redirect('/');
         }
-        createToken(res); // HERE IS USAGE
         res.render('admin/edit-product',{
             pageTitle: 'Edit Product', 
             path: '/admin/edit-product', 
