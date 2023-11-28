@@ -340,4 +340,13 @@ Authorization: Access to certain resources
 + Authorization is the process of verifying what a user has access to
 + not every user should be able to edit or delete every resource
 
+//------------------------------
+//section 18: understand validation
+- Validation
++ Validation is the process of ensuring that data is correct and valid
++ Validation can happen on the client-side and on the server-side
++ Validation on the client-side is optional and should only be used for a better user experience
++ Validation on the server-side is mandatory and should always be implemented
+
+
 
