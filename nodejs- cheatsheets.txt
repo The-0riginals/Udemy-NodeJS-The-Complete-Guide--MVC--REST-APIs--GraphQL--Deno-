@@ -348,5 +348,11 @@ Authorization: Access to certain resources
 + Validation on the client-side is optional and should only be used for a better user experience
 + Validation on the server-side is mandatory and should always be implemented
 
+- Santization data
++ Santization is the process of removing unwanted characters from data(eg: removing HTML tags from a text) 
++ uniform data: lower word or remove whitespaces
++ Santization should always happen on the server-side
++ Santization is a great way to prevent XSS attacks
+
 
 
