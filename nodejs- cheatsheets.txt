@@ -354,5 +354,28 @@ Authorization: Access to certain resources
 + Santization should always happen on the server-side
 + Santization is a great way to prevent XSS attacks
 
+//------------------------------
+//section 19: Error handling
+- Error handling
++ Errors can happen everywhere in your application
++ Errors can be thrown or passed to a callback
++ Errors should be handled in a central place
++ Errors should be logged
++ Errors should be presented to the user in a friendly way
+
+- different types of errors
++ Technical / Network errors: database connection lost, server down, etc. -> show error page
++ "Expected" errors: file can't be read, database operations fails, user input invalid, etc. -> inform user, possibly retry
++ Bugs/logical errors: User object used when it doesn't exist, etc. -> fix during development
+
++ with synchronized code, you can use try-catch blocks to catch errors
++ with asynchronized code, you can use the error-first callback pattern to catch errors(then/catch or async/await)
++ you can use the Express error handling middleware to catch errors in Express apps and handle them 
+
+- setting status code
++ 200: OK, 201: Created, 204: No Content,...
++ 400: Bad Request, 401: Unauthorized, 403: Forbidden, 404: Not Found,...
++ 500: Internal Server Error, 502: Bad Gateway, 503: Service Unavailable,...
++ Setting the right status code is important for SEO and user experience
 
 
