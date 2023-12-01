@@ -1,0 +1,116 @@
+STREAM & BUFFERS & PIPES
+13 upvotes
+Martin · Lecture 332 · 1 year ago
+Explanation: !
+
+
+
+What is a stream and what is a buffer?
+
+The buffer is a temporary storage for data that is transferred from one place to another (read from a file). 
+The buffer is often compared to a bus stop. The bus only runs when there are enough passengers (stream data) on the bus.
+When the bus "leaves and stops at the bus stop", it lets the passengers (collected data) go. 
+So it sends a "chunk", a container of stream data from a [file]. You can listen to the incoming chunks and do some things, like log them.
+
+A stream simply defines a "stream of data that flows from one place to another over time."
+
+By splitting a large [file] into pieces (stream data) that are gradually stored in the buffer and can be passed around and received as chunks.
+
+You can either read a stream (read chunks from a file) or write a stream (write GIVEN chunks in a file).
+
+The advantage of a stream is that you can access the data sooner, as opposed to preloading, where the entire [file] is stored in memory before you can access it.
+
+
+
+Analogy: you don't want to wait until a Udemy course video is fully loaded into memory to start watching it.
+
+
+
+Types of streams: 
+
+* A readable stream: This is where chunks from reading a [file] come together.
+
+
+
+* A writable stream: This is where chunks come together to create a [file].
+
+
+
+Pipe = readStream & writeStream: collects chunks and writes them immediately.
+
+A pipe takes the chunks of a file from readStream and writes them to writeStream. Example: read file and send to the client.
+
+
+
+Resources.
+
+https://www.youtube.com/watch?v=GlybFFMXXmQ
+
+https://www.youtube.com/watch?v=E3tTzx0Qoj0
+
+https://www.youtube.com/watch?v=DvlCT0N7yQI
+
+https://www.youtube.com/watch?v=a8W90jDHSho
+
+// a better format for invoices:
+exports.getinvoice = (req, res, next)=>{
+  const orderId = req.params.orderId;
+ 
+  Order.findById(orderId)
+    .then(order=>{
+      if(!order){
+        return next(new Error('No roder found'))
+      }
+      if(order.user.userId.toString() !== req.user._id.toString()){
+        return next(new Error('Not Authorized'));
+      }
+      const invoiceName = 'invoice-' + orderId + '.pdf';
+      const invoicePath = path.join('data' , 'invoices', invoiceName);
+ 
+      //set headers
+      res.setHeader('Content-type', 'application/pdf');
+      res.setHeader('Content-disposition', 'inline; filename="'+invoiceName+'"');
+      
+  //this code create a PDF file on the fly
+      let pdfDoc = new PDFDocument();
+      pdfDoc.pipe(fs.createWriteStream(invoicePath));
+      pdfDoc.pipe(res);
+      pdfDoc.fontSize(30).text('INVOICE',20,30);
+      pdfDoc.fontSize(30).text('LOGO',20,30,{align:'right'});
+      pdfDoc.text('_______________________________');
+      pdfDoc.text(' ');
+      pdfDoc.fontSize(14).text('Invoice# '+ 'XXXX',20,110);
+      pdfDoc.fontSize(14).text('Invoice Date: '+ 'XX-XXX-XXXX');
+      pdfDoc.fontSize(14).text('Invoice To: '+ 'Lorem ipsum dolor sit');
+      pdfDoc.fontSize(30).text('_______________________________',20,140);
+      pdfDoc.fontSize(14).text(' ');
+      
+      pdfDoc.fontSize(16).text('   ITEM                  DESCRIPTION                       Qty               AMOUNT',20,175);
+      
+      pdfDoc.fontSize(30).text('_______________________________',20,170);
+      let totalPrice = 0;
+      let item = 1;
+      let fsize = 14;
+      let ystart = 210;
+      let xstart = 40;
+      let yinc = fsize + 20;
+      let ycoord = ystart + (item-1)*yinc;
+      order.products.forEach(prod => {
+        totalPrice += prod.quantity * prod.product.price;
+        
+         pdfDoc.fontSize(fsize).text(' '+ item, xstart ,ycoord );
+         pdfDoc.fontSize(fsize).text(prod.product.title, xstart + 120 ,ycoord );
+         pdfDoc.fontSize(fsize).text(prod.quantity, xstart + 330 ,ycoord );
+         pdfDoc.fontSize(fsize).text(prod.product.price, xstart + 430 ,ycoord );
+         item++;
+         ycoord = ystart + (item-1)*fsize;
+      })
+      pdfDoc.fontSize(30).text('_______________________________',20,ycoord);
+      pdfDoc.fontSize(20).text(' Total: $' + totalPrice, 400,ycoord+40);
+      pdfDoc.fontSize(30).text('_______________________________', 20,ycoord+40);
+      pdfDoc.end();
+ 
+    })
+    .catch(err => next(err));
+ 
+};

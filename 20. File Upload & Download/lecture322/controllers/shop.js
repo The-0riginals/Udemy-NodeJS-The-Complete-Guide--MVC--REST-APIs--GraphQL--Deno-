@@ -1,6 +1,11 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
 
+const fs = require('fs');
+const path = require('path');
+
+const PDFDocument = require('pdfkit');
+
 //get all products
 exports.getProducts = (req, res, next) => {
     Product.find()//this will return all the products
@@ -152,6 +157,65 @@ exports.getOrders = (req, res, next) => {
         return next(error);//this will skip all the other middlewares and go to the error handling middleware
     });
 };
+
+exports.getInvoice = (req, res, next) => {
+    const orderId = req.params.orderId;
+    //console.log(orderId);
+    Order.findById(orderId)
+    .then(order => {
+        //console.log(order);
+        if(!order){
+            //console.log('No order found.');
+            return next(new Error('No order found.'));
+        }
+        if(order.user.userId.toString() !== req.user._id.toString()){
+            //console.log('Unauthorized');
+            return next(new Error('Unauthorized'));
+        }
+        const invoiceName = 'invoice-' + orderId + '.pdf';
+        //console.log(invoiceName);
+        const invoicePath = path.join('data','invoices',invoiceName);
+        //console.log(invoicePath);
+
+        //method 1
+        // fs.readFile(invoicePath, (err, data) => {
+        //     if(err){
+        //         return next(err);
+        //     }
+        //     res.setHeader('Content-Type','application/pdf');
+        //     res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"');
+        //     res.send(data);
+        // });
+
+        //method 2
+        // const file = fs.createReadStream(invoicePath);
+        // res.setHeader('Content-Type','application/pdf');
+        // res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"');
+        // file.pipe(res);
+
+        //method 3- automatic generation of pdf on the fly(we don't need to store the pdf in the file system)
+        const pdfDoc = new PDFDocument();
+        res.setHeader('Content-Type','application/pdf');
+        res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"');
+        //pine() will automatically write the data to the response stream
+        pdfDoc.pipe(fs.createWriteStream(invoicePath));
+        pdfDoc.pipe(res);
+        pdfDoc.fontSize(26).text('Invoice', {//this will create a new line and generate the text'Invoice'
+            underline: true
+        });
+        pdfDoc.text('-----------------------');
+        let totalPrice = 0;
+        order.products.forEach(prod => {
+            totalPrice += prod.quantity * prod.product.price;
+            pdfDoc.fontSize(14).text(prod.product.title + ' - ' + prod.quantity + ' x ' + '$' + prod.product.price);
+        });
+        pdfDoc.text('---');
+        pdfDoc.fontSize(20).text('Total Price: $' + totalPrice);
+        pdfDoc.end();
+    })
+    .catch(err => next(err));
+}
+
 //In Sequelize when you create any assciation between two models, sequelize provides us with some methods. For example in case of User.hasMany(Order) association sequelize provides us with:
 // 1. add
 // 2.count

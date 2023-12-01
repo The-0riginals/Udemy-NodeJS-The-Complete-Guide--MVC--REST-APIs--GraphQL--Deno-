@@ -378,4 +378,21 @@ Authorization: Access to certain resources
 + 500: Internal Server Error, 502: Bad Gateway, 503: Service Unavailable,...
 + Setting the right status code is important for SEO and user experience
 
+//------------------------------
+//section 20: File Upload & Download
+- File Upload
++ File upload is a common feature in web applications
++ Files can be uploaded via a form or via an API endpoint
++ Files can be stored on the server or on a cloud storage service like AWS S3
++ Files can be stored in a database (not recommended)
++ In this course, we'll use the 'multer' package to handle file uploads
+
+- File Download
++ Files can be downloaded via a link or via an API endpoint
++ Files can be stored on the server or on a cloud storage service like AWS S3
++ Files can be stored in a database (not recommended)
++ In this course, we'll use the 'pdfkit' package to generated PDF files
+
+//------------------------------
+
 

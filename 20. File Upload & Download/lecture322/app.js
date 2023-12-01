@@ -62,6 +62,7 @@ app.use(express.urlencoded({extended: true}));
 //register a parser for incoming requests that have a form body
 app.use(multer({storage: fileStorage, fileFilter: fileFilter  }).single('image'));//this will store the image in the images folder,'image' is the name of the input field
 app.use(express.static(path.join(__dirname,'public')));
+app.use('/images',express.static(path.join(__dirname,'images')));//this will allow us to serve files statically, this will allow us to serve files from the images folder
 app.use(
     session({
         secret: 'my secret', 
