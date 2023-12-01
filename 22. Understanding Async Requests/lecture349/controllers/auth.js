@@ -1,0 +1,288 @@
+const bcrypt = require('bcryptjs');
+const nodeMailer = require('nodemailer');
+const keys = require('../configs/keys.dev');
+const User = require('../models/user');
+const crypto = require('crypto');
+const { validationResult } = require('express-validator');
+
+const transporter = nodeMailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    auth: {
+        user: keys.USER_GMAIL,
+        pass: keys.PASS_GMAIL
+    }
+});
+//console.log(keys.USER_GMAIL);
+//console.log(keys.PASS_GMAIL);
+
+exports.getLogin = (req, res, next) => {
+    let message = req.flash('error');//this will return an array of all the error messages,'error' is the key that we used in req.flash('error', 'Invalid email or password.');
+    if(message.length > 0){
+        message = message[0];
+    }else{
+        message = null;
+    }
+    res.render('auth/login', {
+        pageTitle: 'Login',
+        path: '/login',
+        errorMessage: message,
+        oldInput: {
+            email: '', 
+            password: ''
+        },
+        validationErrors: []
+    });
+};
+
+exports.postLogin = (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const errors = validationResult(req);//this will return an array of errors from the express-validator middleware (see routes/auth.js)
+    if(!errors.isEmpty()){
+        //console.log(errors.array());
+        return res.status(422).render('auth/login', {//422 is the status code for validation errors
+            pageTitle: 'Login',
+            path: '/login',
+            errorMessage: errors.array()[0].msg,
+            oldInput: {
+                email: email, 
+                password: password
+            },
+            validationErrors: errors.array()
+        });
+    }
+
+    User.findOne({email: email})
+        .then(user => {
+            if(!user){
+                //req.flash('error', 'Invalid email or password.');
+                return res.status(422).render('auth/login', {//422 is the status code for validation errors 
+                    pageTitle: 'Login',
+                    path: '/login',
+                    errorMessage: 'Invalid email or password.',
+                    oldInput: {
+                        email: email, 
+                        password: password
+                    },
+                    validationErrors: []
+                });
+            }
+            bcrypt.compare(password, user.password)
+                .then(doMatch => {
+                    if(doMatch){
+                        req.session.isLoggedIn = true;//this is a session cookie
+                        req.session.user = user;//this is a session cookie
+                        return req.session.save(err => { //make sure that the session is saved before redirecting
+                            console.log(err);
+                            res.redirect('/');
+                        });
+                    }
+                    return res.status(422).render('auth/login', {//422 is the status code for validation errors 
+                        pageTitle: 'Login',
+                        path: '/login',
+                        errorMessage: 'Invalid email or password.',
+                        oldInput: {
+                            email: email, 
+                            password: password
+                        },
+                        validationErrors: []
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.redirect('/login');
+                });
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);//this will skip all the other middlewares and go to the error handling middleware
+        });
+};
+
+exports.postLogout = (req, res, next) => {
+    req.session.destroy(err => { //this will delete the session from the database
+        console.log(err);
+        res.redirect('/');
+    });
+}
+
+exports.getSignup = (req, res, next) => {
+    let message = req.flash('error');//this will return an array of all the error messages,'error' is the key that we used in req.flash('error', 'Invalid message.');
+    if(message.length > 0){
+        message = message[0];
+    }else{
+        message = null;
+    }
+    res.render('auth/signup', {
+        pageTitle: 'Signup',
+        path: '/signup',
+        errorMessage: message,
+        oldInput: {
+            email: '', 
+            password: '', 
+            confirmPassword: ''
+        },
+        validationErrors: []
+    });
+}
+
+exports.postSignup = (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    //const confirmPassword = req.body.confirmPassword;
+    const errors = validationResult(req);//this will return an array of errors from the express-validator middleware (see routes/auth.js)
+    if(!errors.isEmpty()){
+        //console.log(errors.array());
+        return res.status(422).render('auth/signup', {//422 is the status code for validation errors
+            pageTitle: 'Signup',
+            path: '/signup',
+            errorMessage: errors.array()[0].msg,
+            oldInput: {
+                email: email, 
+                password: password, 
+                confirmPassword: req.body.confirmPassword
+            },
+            validationErrors: errors.array()
+        });
+    }
+
+    User.findOne({email: email})
+        .then(userDoc => {
+            if(userDoc){
+                req.flash('error', 'Email already exists, please pick a different one');
+                return res.redirect('/signup');
+            }
+            return bcrypt
+                .hash(password, 12)// 12 is the number of rounds that the password will be hashed
+                .then(hashedPassword => {
+                    const user = new User({
+                        email: email,
+                        password: hashedPassword,
+                        cart: {items: []}
+                    });
+                    return user.save();
+                })
+                .then(result => {
+                    res.redirect('/login');
+                    return transporter.sendMail({
+                        to: email,
+                        from: keys.USER_GMAIL,
+                        subject: 'Signup succeeded',
+                        html: '<h1>You successfully signed up!</h1>'
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);//this will skip all the other middlewares and go to the error handling middleware
+        });
+};
+
+exports.getReset = (req, res, next) => {
+    let message = req.flash('error');//this will return an array of all the error messages,'error' is the key that we used in req.flash('error', 'Invalid message.');
+    if(message.length > 0){
+        message = message[0];
+    }else{
+        message = null;
+    }
+    res.render('auth/reset', {
+        pageTitle: 'Reset Password',
+        path: '/reset',
+        errorMessage: message
+    });
+}
+
+exports.postReset = (req, res, next) => {
+    crypto.randomBytes(32, (err, buffer) => { //generate a random token
+        if(err){
+            console.log(err);
+            return res.redirect('/reset');
+        }
+        const token = buffer.toString('hex');//convert the random token to a string
+        User.findOne({email: req.body.email})
+            .then(user => {
+                if(!user){
+                    req.flash('error', 'No account with that email found.');
+                    return res.redirect('/reset');
+                }
+                user.resetToken = token;
+                user.resetTokenExpiration = Date.now() + 3600000;//1 hour
+                return user.save();
+            })
+            .then(result => {
+                res.redirect('/');
+                transporter.sendMail({
+                    to: req.body.email,
+                    from: keys.USER_GMAIL,
+                    subject: 'Password reset',
+                    html: `
+                        <p>You requested a password reset</p>
+                        <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>
+                    `
+                });
+            })
+            .catch(err => {
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);//this will skip all the other middlewares and go to the error handling middleware
+            });
+    });
+}
+
+exports.getNewPassword = (req, res, next) => {
+    const token = req.params.token;
+    User.findOne({resetToken: token, resetTokenExpiration: {$gt: Date.now()}})//$gt is a mongodb operator that means greater than
+        .then(user => {
+            let message = req.flash('error');//this will return an array of all the error messages,'error' is the key that we used in req.flash('error', 'Invalid message.');
+            if(message.length > 0){
+                message = message[0];
+            }else{
+                message = null;
+            }
+            res.render('auth/new-password', {
+                pageTitle: 'New Password',
+                path: '/new-password',
+                errorMessage: message,
+                userId: user._id.toString(),//we need to convert the user id to string because (primitive and reference types stuff)
+                passwordToken: token
+            });
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);//this will skip all the other middlewares and go to the error handling middleware
+        });
+}
+
+exports.postNewPassword = (req, res, next) => {
+    const newPassword = req.body.password;
+    const userId = req.body.userId;//we need to convert the user id to string because (primitive and reference types stuff)
+    const passwordToken = req.body.passwordToken;
+    let resetUser;
+    User.findOne({resetToken: passwordToken, resetTokenExpiration: {$gt: Date.now()}, _id: userId})//$gt is a mongodb operator that means greater than
+        .then(user => {
+            resetUser = user;
+            return bcrypt.hash(newPassword, 12);
+        })
+        .then(hashedPassword => {
+            resetUser.password = hashedPassword;//update the user password
+            resetUser.resetToken = undefined;//delete the reset token
+            resetUser.resetTokenExpiration = undefined;//delete the reset token expiration
+            return resetUser.save();
+        })
+        .then(result => {
+            res.redirect('/login');
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);//this will skip all the other middlewares and go to the error handling middleware
+        });
+}

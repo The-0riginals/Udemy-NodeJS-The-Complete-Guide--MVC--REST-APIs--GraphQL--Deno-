@@ -404,5 +404,20 @@ Authorization: Access to certain resources
 + Pagination on the server-side is mandatory and should always be implemented
 
 //------------------------------
+//section 22: Async Requests
+- Async Requests
++ Async requests are requests that are sent in the background (not rending or redirecting the page)
++ Async requests are often used to update a page without reloading it
++ Async requests can be sent via XMLHttpRequest or via the Fetch API
++ Async requests can be sent to any URL (not just API endpoints)
++ Async requests can be used to send data to the server or to fetch data from the server
+
+- Fetch API
++ The Fetch API is a modern replacement for XMLHttpRequest
++ The Fetch API is promise-based
++ The Fetch API is built into the browser
++ The Fetch API is easy to use and supports all modern features (like async/await)
+
+//------------------------------
 
 
