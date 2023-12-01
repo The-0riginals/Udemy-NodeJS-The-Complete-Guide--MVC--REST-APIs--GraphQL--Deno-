@@ -394,5 +394,15 @@ Authorization: Access to certain resources
 + In this course, we'll use the 'pdfkit' package to generated PDF files
 
 //------------------------------
+//section 21: Pagination
+- Pagination
++ Pagination is a common feature in web applications
++ Pagination is used to split up a large amount of data into multiple pages
++ Pagination is often used for tables and lists
++ Pagination can be implemented on the client-side and on the server-side
++ Pagination on the client-side is optional and should only be used for a better user experience
++ Pagination on the server-side is mandatory and should always be implemented
+
+//------------------------------
 
 
