@@ -419,5 +419,25 @@ Authorization: Access to certain resources
 + The Fetch API is easy to use and supports all modern features (like async/await)
 
 //------------------------------
+//section 23: Payments
+- Payment process: complex tasks, typically handled by a third-party service
+1.Collect Payment method
+2.Verify Payment
+3.Charge Payment
+4.Manager Payment
+5.Process Order in the app
+- Stripe
++ Stripe is a payment service provider
++ Stripe is a third-party service that handles the payment process for you
++ Stripe is easy to use and supports all modern features (like async/await)
++ Stripe is free to use (you only pay a small fee per transaction)
+
+Client(Browser) -> Collect credit card data 
+-> Send credit card data to Stripe Server(3rd Party) 
+-> Stripe sends back a token to the client after verifying the credit card data
+-> Send token to your server(nodejs)
+-> create a charge with the token on your server sending it to Stripe
+-> Stripe charges the credit card and sends back a response
+
 
 
