@@ -4,5 +4,7 @@ module.exports = {
     CSRF_CSRF_SECRET: 'my secret',
     // Other keys or configuration settings...
     USER_GMAIL: process.env.USER_GMAIL,
-    PASS_GMAIL: process.env.PASS_GMAIL
+    PASS_GMAIL: process.env.PASS_GMAIL,
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
 };

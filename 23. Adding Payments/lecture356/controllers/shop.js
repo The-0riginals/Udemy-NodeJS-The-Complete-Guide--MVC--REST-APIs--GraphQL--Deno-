@@ -1,8 +1,11 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
+const keys = require('../configs/keys.dev');
 
 const fs = require('fs');
 const path = require('path');
+const stripe = require('stripe')(keys.STRIPE_SECRET_KEY);
+
 
 const PDFDocument = require('pdfkit');
 
@@ -158,28 +161,94 @@ exports.postCartDeleteProduct = (req, res, next) => {
 }
 
 exports.getCheckout = (req, res, next) => {
+
+    let products;
+    let total = 0;
     req.user
-    .populate('cart.items.productId')//this will populate the productId field with the entire product object
+        .populate("cart.items.productId")//this will populate the productId field with the entire product object
+        .then((user) => {
+            console.log(user.cart.items);
+            products = user.cart.items;
+            products.forEach((p) => {
+                total += +p.quantity * +p.productId.price;
+            });
+            // Old code Max video: Didn't work
+            // return stripe.checkout.sessions.create({
+            //  payment_method_types: ["card"],
+            //  line_items: products.map((p) => {
+            //      return {
+            //          name: p.productId.title,
+            //          description: p.productId.description,
+            //          price: p.productId.price * 100, // Price in cents
+            //          currency: "eur",
+            //          quantity: p.quantity,
+            //      };
+            //  }),
+            //     success_url: req.protocol + "://" + req.get("host") + "/checkout/success",// => http://localhost:3000
+            //     cancel_url: req.protocol + "://" + req.get("host") + "/checkout/cancel",
+            // });
+            return stripe.checkout.sessions.create({
+                line_items: products.map(p => {
+                    return  {
+                        price_data: {
+                          currency: "eur",
+                          unit_amount: parseInt(Math.ceil(p.productId.price * 100)),
+                          product_data: {
+                            name: p.productId.title,
+                            description: p.productId.description,
+                          },
+                        },
+                        quantity: p.quantity,
+                      }
+                    }),
+                    mode: "payment",
+                    success_url: req.protocol + "://" + req.get("host") + "/checkout/success",// => http://localhost:3000,
+                    cancel_url: req.protocol + "://" + req.get("host") + "/checkout/cancel",
+              });
+        })
+        .then((session) => {
+            res.render("shop/checkout", {
+                pageTitle: "Checkout",
+                path: "/checkout",
+                products: products,
+                totalSum: total.toFixed(2),
+                sessionId: session.id,
+            });
+        })
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+};
+
+exports.getCheckoutSuccess = (req, res, next) => {
+    req.user
+    .populate('cart.items.productId')
     .then(user => {
-        console.log(user.cart.items);
-        const products = user.cart.items;
-        let total = 0;
-        products.forEach(p => {
-            total += p.quantity * p.productId.price;
+        const products = user.cart.items.map(i => {
+            return {quantity: i.quantity, product: {...i.productId._doc}};//_doc will give us the actual product data which is stored in the productId field
         });
-        res.render('shop/checkout', {
-            path: '/checkout',
-            pageTitle: 'Checkout',
-            products: products,
-            totalSum: total
+        const order = new Order({
+            user: {
+                email: req.user.email,
+                userId: req.user
+            },
+            products: products
         });
+        return order.save();
+    })
+    .then(result => {
+        return req.user.clearCart();
+    })
+    .then(() => {
+        res.redirect('/orders');
     })
     .catch(err => {
         const error = new Error(err);
         error.httpStatusCode = 500;
         return next(error);//this will skip all the other middlewares and go to the error handling middleware
     });
-
 };
 
 exports.postOrder = (req, res, next) => {
