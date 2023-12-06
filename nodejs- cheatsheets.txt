@@ -439,5 +439,55 @@ Client(Browser) -> Collect credit card data
 -> create a charge with the token on your server sending it to Stripe
 -> Stripe charges the credit card and sends back a response
 
+//------------------------------
+//section 24: Working with REST APIs - The Basics
+- REST APIs: Frontend(UI) and Backend(API) are separated (decoupled)- SPA
++ REST stands for Representational State Transfer(transfer data instead of HTML(user interface))
++ REST is an architectural style for building APIs
++ REST APIs are stateless (no session data)
++ REST APIs use HTTP methods (GET, POST, PUT, DELETE, PATCH)
+  . GET: fetch data/resources
+  . POST: create data
+  . PUT: replace data/overwrite
+  . DELETE: delete data
+  . PATCH: update data
+  . OPTIONS: determine which methods are supported(sent automatically by browser)
++ REST APIs use HTTP status codes (200, 201, 400, 401, 403, 404, 500, 502, 503)
++ REST APIs can be versioned (e.g. /api/v1/users), documented (e.g. Swagger)
++ Json is the most common format for REST APIs (XML is also possible)
+
+- REST API endpoints
++ the combination of HTTP method and URL is called an endpoint
++ GET /api/v1/users -> get all users
++ GET /api/v1/users/:id -> get single user
+
+- REST Principles : (first two are the most important)
++ uniform interface: Clearly defined API endpoints with clearly defined request + response data structures
++ stateless interactions: server and client dont store any connection in history, every request is handled seperately
++ cacheable: responses can be cached on the client-side
++ client-server architecture: client and server are seperated
++ layered system: client and server can be deployed on different machines
++ code on demand (optional): server can send executable code to the client
+
+-Requests and responses
++ Attach data in JSON format and let the server know about it via the Content-Type header
++ CORS errors occur when using an API does not set CORS headers
+
+- CORS
++ CORS stands for Cross-Origin Resource Sharing
++ CORS is a mechanism that allows restricted resources (e.g. fonts) on a web page to be requested from another domain outside the domain from which the first resource was served
+eg: 
+  . client: http://localhost:3000
+  . server: http://localhost:8080
+  . can be configured on the server
++ CORS is a browser security feature
++ CORS is enabled by default in Express apps
++ CORS can be disabled or configured in Express apps
+
+
+
+
+
+
 
 
