@@ -397,7 +397,7 @@ Authorization: Access to certain resources
 //section 21: Pagination
 - Pagination
 + Pagination is a common feature in web applications
-+ Pagination is used to split up a large amount of data into multiple pages
++ Pagination is used to split up a large amount of data into multiple pages(page 1, page 2, next, previous, etc.)
 + Pagination is often used for tables and lists
 + Pagination can be implemented on the client-side and on the server-side
 + Pagination on the client-side is optional and should only be used for a better user experience
