@@ -15,8 +15,9 @@ const postSchema = new Schema({
         required: true
     },
     creator:{
-        type: Schema.Types.ObjectId,
-        ref: 'User',//this is the model we want to connect to
+        //type: Schema.Types.ObjectId,
+        type: Object,
+        //ref: 'User',//this is the model we want to connect to
         required: true
     }
 },{timestamps: true});//this will add createdAt and updatedAt fields to the schema

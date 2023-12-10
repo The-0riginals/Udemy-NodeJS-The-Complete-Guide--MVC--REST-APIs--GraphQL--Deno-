@@ -59,7 +59,12 @@ class Feed extends Component {
       })
       .then(resData => {
         this.setState({
-          posts: resData.posts,
+          posts: resData.posts.map(post => {
+            return {
+              ...post,
+              imagePath: post.imageUrl//this is the path of the image stored in the backend
+            };
+          }),
           totalPosts: resData.totalItems,
           postsLoading: false
         });
@@ -107,23 +112,26 @@ class Feed extends Component {
       editLoading: true
     });
     // Set up data (with image!)
+    const formData = new FormData();
+    formData.append('title', postData.title);//append the title to the formData
+    formData.append('content', postData.content);//append the content to the formData
+    formData.append('image', postData.image);//append the image to the formData
+
     let url = 'http://localhost:8080/feed/post';
     let method = 'POST';
 
     if (this.state.editPost) {
-      url = 'URL';
+      url = 'http://localhost:8080/feed/post/' + this.state.editPost._id;//this is the url for the update post route
+      method = 'PUT';//this is the method for the update post route
     }
 
     //send the post data to the backend
     fetch(url, {
       method: method,
-      headers: {
-        'Content-Type': 'application/json'//tell the backend that we are sending json data
-      },
-      body: JSON.stringify({ //convert the post data to json
-        title: postData.title,
-        content: postData.content
-      })
+      body: formData,
+      // headers: {
+      //   Authorization: 'Bearer ' + this.props.token//this is how we send the token to the backend
+      // }
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
@@ -175,7 +183,9 @@ class Feed extends Component {
 
   deletePostHandler = postId => {
     this.setState({ postsLoading: true });
-    fetch('URL')
+    fetch('http://localhost:8080/feed/post/' + postId, {
+      method: 'DELETE'
+    })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error('Deleting a post failed!');
