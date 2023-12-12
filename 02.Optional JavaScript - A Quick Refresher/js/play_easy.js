@@ -6,6 +6,14 @@ console.log(name);
 var name = "Maximilian"; // var can be redeclared
 age = 30;
 
+console.log(age);
+
+const fruits = ['kiwi','mango','apple','pear'];
+function appendIndex(fruit, index) {
+    console.log(`${index}. ${fruit}`)
+}
+fruits.forEach(appendIndex);
+
 const summarizeUser = (userName, userAge, userHasHobby) => {
   return (
     "Name is " +
